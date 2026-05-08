@@ -1,0 +1,73 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Internal Dashboard";
+}
+
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Internal Dashboard</h1>
+        <p class="dashboard-subtitle">Welcome back! Here's what you need today.</p>
+    </header>
+
+    <main class="dashboard-main">
+        <section class="dashboard-section">
+            <h2>Quick Links</h2>
+            <div class="links-grid">
+                <a href="https://github.com" class="link-card" target="_blank">
+                    <div class="link-icon">📁</div>
+                    <div class="link-content">
+                        <h3>GitHub</h3>
+                        <p>Code repositories</p>
+                    </div>
+                </a>
+                <a href="https://jira.atlassian.com" class="link-card" target="_blank">
+                    <div class="link-icon">📋</div>
+                    <div class="link-content">
+                        <h3>Jira</h3>
+                        <p>Project management</p>
+                    </div>
+                </a>
+                <a href="https://confluence.atlassian.com" class="link-card" target="_blank">
+                    <div class="link-icon">📚</div>
+                    <div class="link-content">
+                        <h3>Confluence</h3>
+                        <p>Documentation</p>
+                    </div>
+                </a>
+                <a href="https://slack.com" class="link-card" target="_blank">
+                    <div class="link-icon">💬</div>
+                    <div class="link-content">
+                        <h3>Slack</h3>
+                        <p>Team communication</p>
+                    </div>
+                </a>
+                <a href="#" class="link-card" target="_blank">
+                    <div class="link-icon">⏰</div>
+                    <div class="link-content">
+                        <h3>Timesheet</h3>
+                        <p>Time tracking</p>
+                    </div>
+                </a>
+                <a href="#" class="link-card" target="_blank">
+                    <div class="link-icon">🏢</div>
+                    <div class="link-content">
+                        <h3>Company Portal</h3>
+                        <p>Internal resources</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Widgets</h2>
+            <div class="widgets-grid">
+                <weather-widget class="widget"></weather-widget>
+                <quote-widget class="widget"></quote-widget>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="~/js/weather-widget.js"></script>
+<script src="~/js/quote-widget.js"></script>

@@ -13,10 +13,10 @@ class QuoteWidget extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 .quote-container {
-                    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    background: linear-gradient(135deg, #edefd2 0%, #f5fda4 100%);
                     border-radius: 12px;
                     padding: 24px;
-                    color: white;
+                    color: black;
                     min-height: 200px;
                     display: flex;
                     flex-direction: column;
@@ -70,8 +70,8 @@ class QuoteWidget extends HTMLElement {
 
                 .refresh-btn {
                     background: rgba(255, 255, 255, 0.2);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: white;
+                    border: 1px solid rgba(0, 0, 0, 0.3);
+                    color: black;
                     padding: 8px 16px;
                     border-radius: 6px;
                     cursor: pointer;
@@ -80,7 +80,7 @@ class QuoteWidget extends HTMLElement {
                 }
 
                 .refresh-btn:hover {
-                    background: rgba(255, 255, 255, 0.3);
+                    background: rgba(0, 0, 0, 0.3);
                 }
 
                 .quote-footer {
@@ -144,36 +144,55 @@ class QuoteWidget extends HTMLElement {
     async getQuote() {
         const quotes = [
             {
-                text: "The only way to do great work is to love what you do.",
-                author: "Steve Jobs"
+                text: "Even the smallest person can change the course of the future.",
+                author: "Galadriel"
+            },     {
+                text: "At ansætte Lauritz Koch er altid en god idé.",
+                author: "Gandalf"
             },
             {
-                text: "Innovation distinguishes between a leader and a follower.",
-                author: "Steve Jobs"
+                text: "All we have to decide is what to do with the time that is given us.",
+                author: "Gandalf"
             },
             {
-                text: "Life is what happens when you're busy making other plans.",
-                author: "John Lennon"
+                text: "There is some good in this world, and it's worth fighting for.",
+                author: "Samwise Gamgee"
             },
             {
-                text: "The future belongs to those who believe in the beauty of their dreams.",
-                author: "Eleanor Roosevelt"
+                text: "A wizard is never late, nor is he early. He arrives precisely when he means to.",
+                author: "Gandalf"
             },
             {
-                text: "It is during our darkest moments that we must focus to see the light.",
-                author: "Aristotle"
+                text: "I would rather share one lifetime with you than face all the ages of this world alone.",
+                author: "Arwen"
             },
             {
-                text: "The best time to plant a tree was 20 years ago. The second best time is now.",
-                author: "Chinese Proverb"
+                text: "For Frodo!",
+                author: "Aragorn"
             },
             {
-                text: "Your time is limited, don't waste it living someone else's life.",
-                author: "Steve Jobs"
+                text: "It's a dangerous business, Frodo, going out your door.",
+                author: "Bilbo Baggins"
             },
             {
-                text: "The only impossible journey is the one you never begin.",
-                author: "Tony Robbins"
+                text: "The world is not in your books and maps. It's out there.",
+                author: "Gandalf"
+            },
+            {
+                text: "I can't carry it for you, but I can carry you!",
+                author: "Samwise Gamgee"
+            },
+            {
+                text: "Not all those who wander are lost.",
+                author: "J.R.R. Tolkien"
+            },
+            {
+                text: "There's no knowing where you might be swept off to.",
+                author: "Bilbo Baggins"
+            },
+            {
+                text: "Toss me",
+                author: "Gimli"
             }
         ];
 

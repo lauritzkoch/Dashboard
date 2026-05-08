@@ -1,10 +1,65 @@
 class WeatherWidget extends HTMLElement {
+    static CITIES = [
+        { label: 'Aabenraa', id: 2625070 },
+        { label: 'Aalborg', id: 2624886 },
+        { label: 'Aarhus', id: 2624652 },
+        { label: 'Birkerød', id: 2624112 },
+        { label: 'Brønderslev', id: 2623337 },
+        { label: 'Copenhagen', id: 2618425 },
+        { label: 'Esbjerg', id: 2622447 },
+        { label: 'Fredensborg', id: 2621956 },
+        { label: 'Fredericia', id: 2621951 },
+        { label: 'Frederikshavn', id: 2621927 },
+        { label: 'Frederikssund', id: 2621912 },
+        { label: 'Glostrup', id: 2621356 },
+        { label: 'Grenaa', id: 2621230 },
+        { label: 'Haderslev', id: 2620964 },
+        { label: 'Hadsten', id: 2620956 },
+        { label: 'Hedensted', id: 2620583 },
+        { label: 'Helsingør', id: 2620473 },
+        { label: 'Herning', id: 2620425 },
+        { label: 'Hillerød', id: 2620320 },
+        { label: 'Hjørring', id: 2620214 },
+        { label: 'Holbæk', id: 2620147 },
+        { label: 'Holstebro', id: 2620046 },
+        { label: 'Horsens', id: 2619771 },
+        { label: 'Hvidovre', id: 2619528 },
+        { label: 'Ikast', id: 2619426 },
+        { label: 'Kalundborg', id: 2619154 },
+        { label: 'Kolding', id: 2618528 },
+        { label: 'Køge', id: 2618415 },
+        { label: 'Lemvig', id: 2617812 },
+        { label: 'Middelfart', id: 2616933 },
+        { label: 'Nyborg', id: 2616015 },
+        { label: 'Nykøbing Falster', id: 2615961 },
+        { label: 'Næstved', id: 2616038 },
+        { label: 'Odense', id: 2615876 },
+        { label: 'Randers', id: 2615006 },
+        { label: 'Ringsted', id: 2614764 },
+        { label: 'Roskilde', id: 2614481 },
+        { label: 'Silkeborg', id: 2614030 },
+        { label: 'Skanderborg', id: 2613887 },
+        { label: 'Skive', id: 2613731 },
+        { label: 'Slagelse', id: 2613460 },
+        { label: 'Struer', id: 2612204 },
+        { label: 'Svendborg', id: 2612045 },
+        { label: 'Sønderborg', id: 2613102 },
+        { label: 'Taastrup', id: 2611828 },
+        { label: 'Thisted', id: 2611755 },
+        { label: 'Tønder', id: 2611497 },
+        { label: 'Varde', id: 2610726 },
+        { label: 'Vejen', id: 2610634 },
+        { label: 'Vejle', id: 2610613 },
+        { label: 'Viborg', id: 2610319 },
+    ];
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
+        this.cityId = parseInt(this.getAttribute('city-id')) || 2624652;
         this.render();
         this.fetchWeather();
     }
@@ -95,6 +150,22 @@ class WeatherWidget extends HTMLElement {
                 .refresh-btn:hover {
                     background: rgba(0, 0, 0, 0.3);
                 }
+
+                .city-select {
+                    background: rgba(255, 255, 255, 0.5);
+                    border: 1px solid rgba(0, 0, 0, 0.2);
+                    color: black;
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    outline: none;
+                    margin-left: auto;
+                }
+
+                .city-select:hover {
+                    background: rgba(255, 255, 255, 0.7);
+                }
             </style>
 
             <div class="weather-container">
@@ -104,7 +175,12 @@ class WeatherWidget extends HTMLElement {
                 <div class="weather-content" id="weatherContent" style="display: none;">
                     <div class="weather-header">
                         <div class="weather-icon" id="weatherIcon"></div>
-                        <div class="weather-location">Aarhus, Denmark</div>
+                        <div class="weather-location" id="locationLabel">Aarhus, Denmark</div>
+                        <select class="city-select" id="citySelect">
+                            ${WeatherWidget.CITIES.map(c => 
+                                `<option value="${c.id}" ${c.id === this.cityId ? 'selected' : ''}>${c.label}</option>`
+                            ).join('')}
+                        </select>
                     </div>
                     <div class="weather-temperature" id="temperature">--°C</div>
                     <div class="weather-description" id="description">Loading...</div>
@@ -137,6 +213,10 @@ class WeatherWidget extends HTMLElement {
 
         this.shadowRoot.getElementById('refreshBtn').addEventListener('click', () => this.fetchWeather());
         this.shadowRoot.getElementById('retryBtn').addEventListener('click', () => this.fetchWeather());
+        this.shadowRoot.getElementById('citySelect').addEventListener('change', (e) => {
+            this.cityId = parseInt(e.target.value);
+            this.fetchWeather();
+        });
     }
 
     async fetchWeather() {
@@ -149,7 +229,7 @@ class WeatherWidget extends HTMLElement {
         error.style.display = 'none';
 
         try {
-            const weatherData = await this.getWeatherData();
+            const weatherData = await this.getWeatherData(this.cityId);
             this.updateWeatherDisplay(weatherData);
             loading.style.display = 'none';
             content.style.display = 'block';
@@ -160,23 +240,8 @@ class WeatherWidget extends HTMLElement {
         }
     }
 
-    async getWeatherData() {
-        // Get API key from backend configuration
-        const configResponse = await fetch('/api/config/weather');
-        if (!configResponse.ok) throw new Error('Failed to get API configuration');
-
-        const config = await configResponse.json();
-        const apiKey = config.apiKey;
-
-        if (apiKey === 'your_api_key_here') {
-            throw new Error('Please configure your OpenWeatherMap API key in .env file');
-        }
-
-        // Call OpenWeatherMap API
-        const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=Aarhus,DK&appid=${apiKey}&units=metric`
-        );
-
+    async getWeatherData(cityId = 2624652) {
+        const response = await fetch(`/api/weather/${cityId}`);
         if (!response.ok) throw new Error('Weather API failed');
 
         const data = await response.json();
@@ -214,6 +279,8 @@ class WeatherWidget extends HTMLElement {
         this.shadowRoot.getElementById('feelsLike').textContent = `Feels like ${data.feelsLike}°C`;
         this.shadowRoot.getElementById('visibility').textContent = `${data.visibility} km visibility`;
         this.shadowRoot.getElementById('weatherIcon').textContent = data.icon;
+        const selected = WeatherWidget.CITIES.find(c => c.id === this.cityId);
+        this.shadowRoot.getElementById('locationLabel').textContent = selected ? `${selected.label}, Denmark` : 'Denmark';
     }
 }
 

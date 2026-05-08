@@ -1,9 +1,14 @@
 using Dashboard;
+using DotNetEnv;
+
+// Load environment variables from .env file
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
 // Load OpenWeatherMap API key from environment variables
 var openWeatherApiKey = builder.Configuration["OPENWEATHER_API_KEY"] ?? "your_api_key_here";
@@ -13,7 +18,18 @@ builder.Services.AddSingleton<OpenWeatherConfig>(new OpenWeatherConfig(openWeath
 
 var app = builder.Build();
 
-app.MapGet("/api/config/weather", (OpenWeatherConfig config) => Results.Ok(config));
+app.MapGet("/api/weather/{cityId:int}", async (int cityId, OpenWeatherConfig config, IHttpClientFactory httpClientFactory) =>
+{
+    var client = httpClientFactory.CreateClient();
+    var response = await client.GetAsync(
+        $"https://api.openweathermap.org/data/2.5/weather?id={cityId}&appid={config.ApiKey}&units=metric");
+
+    if (!response.IsSuccessStatusCode)
+        return Results.StatusCode((int)response.StatusCode);
+
+    var json = await response.Content.ReadAsStringAsync();
+    return Results.Content(json, "application/json");
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

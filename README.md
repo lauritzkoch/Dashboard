@@ -87,11 +87,16 @@ Dashboard/
 ## API Integration
 
 ### Weather Widget
-Currently uses mock data for demonstration. To enable real weather data:
+The weather widget now uses real data from OpenWeatherMap API. To enable it:
 
 1. Sign up for a free API key at [OpenWeatherMap](https://openweathermap.org/api)
-2. Uncomment the API call in `wwwroot/js/weather-widget.js`
-3. Replace `YOUR_API_KEY_HERE` with your actual API key
+2. Copy `.env.example` to `.env` and add your API key:
+   ```
+   OPENWEATHER_API_KEY=your_actual_api_key_here
+   ```
+3. Restart the application to load the new environment variable
+
+The widget will automatically fetch the API key from the backend configuration and display real weather data for Aarhus, Denmark.
 
 ### Quote Widget
 Currently uses a curated collection of motivational quotes. Can be extended to use external quote APIs.
@@ -121,7 +126,7 @@ Breakdown:
 
 With more time, I would implement:
 
-1. **Real API Integration**: Connect to actual weather and quote APIs
+1. **Quote API Integration**: Connect to actual quote APIs for dynamic content
 2. **User Persistence**: Save user preferences (favorite links, widget positions)
 3. **Drag & Drop**: Allow reordering of widgets and links
 4. **Dark Mode**: Theme switcher for different viewing preferences

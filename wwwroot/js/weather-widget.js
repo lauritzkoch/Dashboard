@@ -13,10 +13,10 @@ class WeatherWidget extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 .weather-container {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    background: linear-gradient(135deg, #fefff9 0%, #f5ffb5 100%);
                     border-radius: 12px;
                     padding: 24px;
-                    color: white;
+                    color: black;
                     min-height: 200px;
                     display: flex;
                     flex-direction: column;
@@ -76,15 +76,15 @@ class WeatherWidget extends HTMLElement {
                 .error {
                     text-align: center;
                     padding: 20px;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: rgba(0, 0, 0, 0.1);
                     border-radius: 8px;
                     margin-top: 16px;
                 }
 
                 .refresh-btn {
-                    background: rgba(255, 255, 255, 0.2);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: white;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 1px solid rgba(0, 0, 0, 0.3);
+                    color: black;
                     padding: 8px 16px;
                     border-radius: 6px;
                     cursor: pointer;
@@ -93,7 +93,7 @@ class WeatherWidget extends HTMLElement {
                 }
 
                 .refresh-btn:hover {
-                    background: rgba(255, 255, 255, 0.3);
+                    background: rgba(0, 0, 0, 0.3);
                 }
             </style>
 
@@ -161,21 +161,18 @@ class WeatherWidget extends HTMLElement {
     }
 
     async getWeatherData() {
-        // Mock data for demonstration - replace with real API call
-        // Sign up for free API key at https://openweathermap.org/api
-        return {
-            temperature: 18,
-            description: 'Partly cloudy',
-            humidity: 65,
-            windSpeed: 3.2,
-            feelsLike: 17,
-            visibility: 10,
-            icon: '⛅'
-        };
+        // Get API key from backend configuration
+        const configResponse = await fetch('/api/config/weather');
+        if (!configResponse.ok) throw new Error('Failed to get API configuration');
 
-        // Example real API call (uncomment and add API key):
-        /*
-        const apiKey = 'YOUR_API_KEY_HERE';
+        const config = await configResponse.json();
+        const apiKey = config.apiKey;
+
+        if (apiKey === 'your_api_key_here') {
+            throw new Error('Please configure your OpenWeatherMap API key in .env file');
+        }
+
+        // Call OpenWeatherMap API
         const response = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?q=Aarhus,DK&appid=${apiKey}&units=metric`
         );
@@ -192,7 +189,6 @@ class WeatherWidget extends HTMLElement {
             visibility: data.visibility / 1000,
             icon: this.getWeatherIcon(data.weather[0].main)
         };
-        */
     }
 
     getWeatherIcon(weatherMain) {

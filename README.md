@@ -1,2 +1,1 @@
-# Dashboard
-interview-assignment - Internal Dashboard
+Lauritz's Interne Dashboard
